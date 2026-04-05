@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import CreateDoubt from '../components/CreateDoubt';
 import { AuthContext } from '../context/AuthContext';
@@ -76,12 +77,17 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="mt-6 flex items-center text-sm text-slate-500 space-x-6">
-                <button className="inline-flex items-center hover:text-brand-600">
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  {doubt.answers?.length || 0} Answers
-                </button>
-                <span className="text-slate-400">Posted on {new Date(doubt.createdAt).toLocaleDateString()}</span>
+              <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
+                <div className="flex items-center space-x-6">
+                  <button className="inline-flex items-center hover:text-brand-600">
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    {doubt.answers?.length || 0} Answers
+                  </button>
+                  <span className="text-slate-400">Posted on {new Date(doubt.createdAt).toLocaleDateString()}</span>
+                </div>
+                <Link to={`/doubts/${doubt._id}`} className="text-brand-600 font-bold hover:underline shrink-0 bg-brand-50 px-3 py-1 rounded">
+                  View Discussion
+                </Link>
               </div>
             </div>
           </div>

@@ -35,10 +35,14 @@ io.on('connection', (socket) => {
 const authRoutes = require('./routes/authRoutes');
 const doubtRoutes = require('./routes/doubtRoutes');
 const answerRoutes = require('./routes/answerRoutes');
+const userRoutes = require('./routes/userRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/doubts', doubtRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/bookings', bookingRoutes);
 app.use('/api', answerRoutes);
 
 // Basic Route for testing

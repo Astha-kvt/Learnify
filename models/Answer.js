@@ -19,6 +19,14 @@ const answerSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  upvotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  downvotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Answer', answerSchema);

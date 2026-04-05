@@ -5,6 +5,11 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Navbar from './components/Navbar';
+import DoubtDetails from './pages/DoubtDetails';
+import Leaderboard from './pages/Leaderboard';
+import UserProfile from './pages/UserProfile';
+import Tutors from './pages/Tutors';
+import BookingsDashboard from './pages/BookingsDashboard';
 
 function App() {
   return (
@@ -18,6 +23,11 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/doubts/:id" element={<DoubtDetails />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/profile/:id" element={<UserProfile />} />
+              <Route path="/tutors" element={<Tutors />} />
+              <Route path="/bookings" element={<BookingsDashboard />} />
             </Routes>
           </main>
         </div>
