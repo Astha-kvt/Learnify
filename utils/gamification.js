@@ -1,0 +1,27 @@
+const User = require('../models/User');
+
+const awardPointsAndCheckBadges = async (userId, pointsToAdd) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) throw new Error('User not found');
+
+    user.points += pointsToAdd;
+
+    // Badge Gamification Logic
+    if (user.points >= 50 && !user.badges.includes('Helpful Peer')) {
+      user.badges.push('Helpful Peer');
+    }
+    
+    if (user.points >= 150 && !user.badges.includes('Expert Tutor')) {
+      user.badges.push('Expert Tutor');
+    }
+
+    await user.save();
+    return user;
+  } catch (error) {
+    console.error('Gamification Error:', error.message);
+    throw error;
+  }
+};
+
+module.exports = { awardPointsAndCheckBadges };

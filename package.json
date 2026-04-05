@@ -1,0 +1,40 @@
+{
+  "name": "learnify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Astha-kvt/Learnify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Astha-kvt/Learnify/issues"
+  },
+  "homepage": "https://github.com/Astha-kvt/Learnify#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.9.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "multer": "^2.1.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.14"
+  }
+}
