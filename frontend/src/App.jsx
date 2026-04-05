@@ -15,10 +15,19 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-slate-50">
+        {/* Soft Animated Pastel Gradient Background covering the whole screen natively behind content */}
+        <div className="min-h-screen bg-slate-50 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-100 via-white to-brand-50 pt-24 pb-12 selection:bg-brand-200 selection:text-ink relative">
+          
           <Navbar />
-          <Toaster position="top-right" />
-          <main>
+          <Toaster 
+            position="bottom-center" 
+            toastOptions={{
+              className: 'font-sans font-bold shadow-soft rounded-xl border border-slate-100',
+              style: { padding: '16px', color: '#0f172a' }
+            }} 
+          />
+          
+          <main className="relative z-10 w-full animate-fade-in px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

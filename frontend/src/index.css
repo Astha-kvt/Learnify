@@ -1,10 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply text-slate-700 bg-slate-50;
+    -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-ink;
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/60 backdrop-blur-xl border border-white/50 shadow-glass;
+  }
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-2xl border border-white/60 shadow-soft;
+  }
+  .transition-spring {
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition-duration: 300ms;
+  }
+  .podium-1 { height: 180px; }
+  .podium-2 { height: 140px; }
+  .podium-3 { height: 110px; }
 }

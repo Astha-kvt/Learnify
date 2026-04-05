@@ -2,7 +2,10 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { LogIn } from 'lucide-react';
+import { LogIn, BookOpen } from 'lucide-react';
+import Card from '../components/ui/Card';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -22,63 +25,45 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900">
-          Sign in to Learnify
-        </h2>
+    <div className="flex flex-col justify-center min-h-[80vh]">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-100 text-brand-600 mb-4 shadow-inner">
+           <BookOpen className="w-8 h-8" />
+        </div>
+        <h2 className="text-4xl font-extrabold text-ink">Sign in</h2>
+        <p className="mt-2 text-slate-500 font-medium">Welcome back to Learnify</p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-slate-200">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Email address</label>
-              <div className="mt-1">
-                <input
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Password</label>
-              <div className="mt-1">
-                <input
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors"
-              >
-                <LogIn className="w-5 h-5 mr-2" />
-                Sign in
-              </button>
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Card>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <Input 
+              label="Email Address" 
+              type="email" 
+              required 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              placeholder="you@university.edu"
+            />
+            <Input 
+              label="Password" 
+              type="password" 
+              required 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              placeholder="••••••••"
+            />
+            <div className="pt-2">
+              <Button type="submit" className="w-full h-12 text-lg">
+                <LogIn className="w-5 h-5 mr-2" /> Sign in
+              </Button>
             </div>
           </form>
           
-          <div className="mt-6">
-            <div className="relative">
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-slate-500">
-                  Don't have an account? <Link to="/register" className="font-medium text-brand-500 hover:text-brand-600">Sign up</Link>
-                </span>
-              </div>
-            </div>
+          <div className="mt-8 text-center text-sm font-semibold text-slate-500">
+            Don't have an account? <Link to="/register" className="text-brand-600 hover:text-brand-700 underline decoration-2 underline-offset-4">Sign up</Link>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

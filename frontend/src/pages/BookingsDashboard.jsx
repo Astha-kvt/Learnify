@@ -1,8 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { Video, Check, X, Clock } from 'lucide-react';
+import { Video, Check, X, Clock, CalendarDays } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 
 export default function BookingsDashboard() {
   const { user } = useContext(AuthContext);
@@ -36,72 +40,80 @@ export default function BookingsDashboard() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-extrabold text-slate-900 mb-8">My Bookings</h1>
+    <div className="max-w-5xl mx-auto py-8">
+      <div className="flex items-center mb-10">
+        <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center text-brand-600 mr-4">
+          <CalendarDays className="w-6 h-6" />
+        </div>
+        <h1 className="text-4xl font-black text-ink">Session Dashboard</h1>
+      </div>
       
-      <div className="bg-white shadow overflow-hidden sm:rounded-md border border-slate-200">
-        <ul className="divide-y divide-slate-200">
-          {bookings.map(booking => (
-            <li key={booking._id} className="p-6 hover:bg-slate-50 transition">
-              <div className="flex flex-col md:flex-row justify-between md:items-center">
-                 <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider
-                        ${booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                          booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'}`}
-                      >
-                        {booking.status}
-                      </span>
-                      <span className="text-slate-500 text-sm flex items-center font-medium">
-                        <Clock className="w-4 h-4 mr-1" /> {new Date(booking.date).toLocaleDateString()} at {booking.timeSlot}
-                      </span>
-                    </div>
+      <div className="space-y-4">
+        {bookings.map(booking => (
+          <Card key={booking._id} noPadding className="overflow-hidden bg-white/80 border-slate-200">
+            <div className="p-5 sm:p-6 flex flex-col md:flex-row justify-between md:items-center">
+               <div>
+                  <div className="flex items-center gap-3 mb-3 flex-wrap">
+                    {booking.status === 'pending' && <Badge variant="warning">Pending Approval</Badge>}
+                    {booking.status === 'confirmed' && <Badge variant="success">Confirmed Room</Badge>}
+                    {booking.status === 'completed' && <Badge variant="default">Completed/Closed</Badge>}
+                    <span className="text-slate-500 text-sm flex items-center font-bold px-2 py-1 bg-slate-50 border border-slate-100 rounded-md">
+                      <Clock className="w-4 h-4 mr-1.5 text-brand-500" /> {new Date(booking.date).toLocaleDateString()} at {booking.timeSlot}
+                    </span>
+                  </div>
 
-                    {user?.role === 'tutor' ? (
-                      <p className="text-lg font-bold text-slate-900 mt-2">
-                        Session with <span className="text-brand-600">{booking.student?.name}</span>
-                      </p>
-                    ) : (
-                      <p className="text-lg font-bold text-slate-900 mt-2">
-                        Tutor: <span className="text-brand-600">{booking.tutor?.name}</span>
-                      </p>
-                    )}
-                 </div>
+                  {user?.role === 'tutor' ? (
+                    <p className="text-xl font-bold text-ink">
+                      Session with <span className="text-brand-600">{booking.student?.name}</span>
+                    </p>
+                  ) : (
+                    <p className="text-xl font-bold text-ink">
+                      Tutor: <span className="text-brand-600">{booking.tutor?.name}</span>
+                    </p>
+                  )}
+               </div>
 
-                 <div className="mt-4 md:mt-0 flex flex-col items-end gap-3">
-                    {/* Tutor Actions */}
-                    {user?.role === 'tutor' && booking.status === 'pending' && (
-                       <div className="flex items-center gap-2">
-                          <input 
-                            type="url" 
-                            placeholder="Zoom/Meet Link..."
-                            className="text-sm border border-slate-300 rounded p-2 focus:ring-brand-500 focus:border-brand-500 w-48"
-                            value={meetingLinks[booking._id] || ''}
-                            onChange={(e) => setMeetingLinks({...meetingLinks, [booking._id]: e.target.value})}
-                          />
-                          <button 
+               <div className="mt-5 md:mt-0 flex flex-col items-end gap-3 w-full md:w-auto">
+                  {/* Tutor Actions */}
+                  {user?.role === 'tutor' && booking.status === 'pending' && (
+                     <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 w-full">
+                        <Input 
+                          type="url" 
+                          placeholder="Meeting Link (Zoom/Meet)..."
+                          className="w-full sm:w-64"
+                          value={meetingLinks[booking._id] || ''}
+                          onChange={(e) => setMeetingLinks({...meetingLinks, [booking._id]: e.target.value})}
+                        />
+                        <div className="flex gap-2 w-full sm:w-auto">
+                          <Button 
                             onClick={() => handleUpdateStatus(booking._id, 'confirmed', meetingLinks[booking._id])}
-                            className="bg-green-600 text-white p-2 rounded hover:bg-green-700" title="Confirm"
-                          ><Check className="w-4 h-4" /></button>
-                          <button 
+                            variant="primary" className="flex-1 bg-emerald-600 hover:bg-emerald-700 shadow-none px-3" title="Confirm"
+                          ><Check className="w-5 h-5 mx-auto" /></Button>
+                          <Button 
                             onClick={() => handleUpdateStatus(booking._id, 'completed')}
-                            className="bg-slate-200 text-slate-700 p-2 rounded hover:bg-slate-300" title="Reject/Close"
-                          ><X className="w-4 h-4" /></button>
-                       </div>
-                    )}
-                    
-                    {/* Student/Tutor Link view */}
-                    {booking.status === 'confirmed' && booking.meetingLink && (
-                       <a href={booking.meetingLink} target="_blank" rel="noreferrer" className="flex items-center px-4 py-2 bg-brand-600 text-white font-medium rounded shadow hover:bg-brand-700">
+                            variant="destructive" className="flex-[0.5] shadow-none px-3" title="Reject/Close"
+                          ><X className="w-5 h-5 mx-auto" /></Button>
+                        </div>
+                     </div>
+                  )}
+                  
+                  {/* Student/Tutor Link view */}
+                  {booking.status === 'confirmed' && booking.meetingLink && (
+                     <a href={booking.meetingLink} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
+                       <Button variant="primary" className="w-full shadow-glow">
                          <Video className="w-4 h-4 mr-2" /> Join Meeting
-                       </a>
-                    )}
-                 </div>
-              </div>
-            </li>
-          ))}
-          {bookings.length === 0 && <li className="p-8 text-center text-slate-500">No bookings found.</li>}
-        </ul>
+                       </Button>
+                     </a>
+                  )}
+               </div>
+            </div>
+          </Card>
+        ))}
+        {bookings.length === 0 && (
+          <Card className="p-8 text-center border-dashed border-2 bg-transparent text-slate-500 font-bold">
+            No active bookings found.
+          </Card>
+        )}
       </div>
     </div>
   );

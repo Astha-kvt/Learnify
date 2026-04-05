@@ -2,7 +2,10 @@ import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Sparkles } from 'lucide-react';
+import Card from '../components/ui/Card';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
 
 export default function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
@@ -21,80 +24,45 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900">
-          Create your account
-        </h2>
+    <div className="flex flex-col justify-center min-h-[80vh] py-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mb-4 shadow-inner">
+           <Sparkles className="w-8 h-8" />
+        </div>
+        <h2 className="text-4xl font-extrabold text-ink">Join Learnify</h2>
+        <p className="mt-2 text-slate-500 font-medium">Ignite your collaborative learning</p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-slate-200">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Full Name</label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Card>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <Input label="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required placeholder="Jane Doe" />
+            <Input label="Email" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required placeholder="jane@example.com" />
+            <Input label="Password" type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required placeholder="Min 6 characters" />
+            
+            <div className="pt-2">
+              <label className="block text-sm font-bold text-ink mb-2">I am signing up as a:</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button type="button" onClick={() => setFormData({...formData, role: 'student'})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.role === 'student' ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-slate-200 bg-white/50 text-slate-500 hover:border-slate-300'}`}>
+                  Student
+                </button>
+                <button type="button" onClick={() => setFormData({...formData, role: 'tutor'})} className={`p-3 rounded-xl border-2 font-bold transition-all ${formData.role === 'tutor' ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-slate-200 bg-white/50 text-slate-500 hover:border-slate-300'}`}>
+                  Tutor
+                </button>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Email address</label>
-              <div className="mt-1">
-                <input
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Password</label>
-              <div className="mt-1">
-                <input
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Role</label>
-              <div className="mt-1">
-                <select
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm rounded-md border bg-white"
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                >
-                  <option value="student">Student</option>
-                  <option value="tutor">Tutor</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-500 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors"
-              >
-                <UserPlus className="w-5 h-5 mr-2" />
-                Register
-              </button>
+            <div className="pt-4">
+              <Button type="submit" className="w-full h-12 text-lg">
+                <UserPlus className="w-5 h-5 mr-2" /> Create Account
+              </Button>
             </div>
           </form>
-        </div>
+          
+          <div className="mt-6 text-center text-sm font-semibold text-slate-500">
+            Already have an account? <Link to="/login" className="text-brand-600 hover:text-brand-700 underline decoration-2 underline-offset-4">Log in</Link>
+          </div>
+        </Card>
       </div>
     </div>
   );

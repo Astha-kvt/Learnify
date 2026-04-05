@@ -1,92 +1,79 @@
 import { useState } from 'react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-import { Send, Image as ImageIcon } from 'lucide-react';
+import { ImagePlus, Send } from 'lucide-react';
+import Card from './ui/Card';
+import Input from './ui/Input';
+import Button from './ui/Button';
 
 export default function CreateDoubt({ onDoubtCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [files, setFiles] = useState(null);
+  const [images, setImages] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !description) return toast.error('Please fill in title and description');
-
     setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      
-      if (files) {
-        Array.from(files).forEach((file) => {
-          formData.append('images', file);
-        });
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        formData.append('images', images[i]);
       }
+    }
 
-      const { data } = await api.post('/doubts', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+    try {
+      await api.post('/doubts', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      toast.success('Doubt posted successfully!');
+      toast.success('Question posted successfully!');
       setTitle('');
       setDescription('');
-      setFiles(null);
-      if (onDoubtCreated) onDoubtCreated(data); // callback to refresh feed
+      setImages(null);
+      if (onDoubtCreated) onDoubtCreated();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to post doubt');
+      toast.error('Failed to post question');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white shadow sm:rounded-lg p-6 mb-8 border border-slate-200">
-      <h3 className="text-lg font-medium leading-6 text-slate-900 mb-4">Have a doubt? Ask away!</h3>
+    <Card className="mb-8 border-brand-200 shadow-md">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <input
-            type="text"
-            className="block w-full border-slate-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 sm:text-sm px-4 py-2 border"
-            placeholder="What's your question?"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <textarea
-            rows={3}
-            className="block w-full border-slate-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 sm:text-sm px-4 py-2 border"
-            placeholder="Provide some details..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center justify-between">
-          <label className="cursor-pointer inline-flex items-center text-sm text-slate-600 hover:text-brand-600">
-            <ImageIcon className="w-5 h-5 mr-2" />
-            <span>Attach Images</span>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => setFiles(e.target.files)}
-            />
+        <h3 className="text-xl font-bold text-ink flex items-center">Ask a Question</h3>
+        <Input 
+          placeholder="What's your question? Be specific." 
+          required 
+          value={title} 
+          onChange={(e) => setTitle(e.target.value)} 
+          className="font-bold text-lg"
+        />
+        <Input 
+          type="textarea"
+          rows={3} 
+          placeholder="Provide all the details, context, and what you've tried..." 
+          required 
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)} 
+          className="font-medium"
+        />
+        
+        <div className="flex flex-col sm:flex-row items-center justify-between pt-2 gap-4">
+          <label className="flex items-center px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl cursor-pointer hover:bg-slate-200 transition-spring font-semibold text-sm border border-slate-200 w-full sm:w-auto justify-center">
+            <ImagePlus className="w-5 h-5 mr-2 text-brand-600" />
+            {images ? `${images.length} file(s)` : 'Attach Images'}
+            <input type="file" multiple accept="image/*" onChange={(e) => setImages(e.target.files)} className="hidden" />
           </label>
-          <span className="text-xs text-slate-400">
-            {files ? `${files.length} file(s) selected` : 'Max 5 images allowed'}
-          </span>
-          <button
-            type="submit"
-            disabled={loading}
-            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-500 hover:bg-brand-600 focus:outline-none disabled:opacity-50"
-          >
-            {loading ? 'Posting...' : <><Send className="w-4 h-4 mr-2" /> Post Doubt</>}
-          </button>
+          <Button type="submit" disabled={loading} className="w-full sm:w-auto px-6 h-11">
+            <Send className="w-4 h-4 mr-2" />
+            {loading ? 'Posting...' : 'Post Question'}
+          </Button>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }
